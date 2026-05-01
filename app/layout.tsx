@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CrispEmbed } from "@/app/_components/CrispEmbed";
+import { PlausibleEmbed } from "@/app/_components/PlausibleEmbed";
 
 export const metadata: Metadata = {
   title: "Tracer — Editorial Automation für Radiologie & Bildgebung",
@@ -15,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body>{children}</body>
+      <body>
+        {children}
+        <CrispEmbed />
+        <PlausibleEmbed />
+      </body>
     </html>
   );
 }

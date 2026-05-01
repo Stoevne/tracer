@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/sources/scrape",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/brief/draft",
+      "schedule": "0 18 * * 0"
+    },
+    {
+      "path": "/api/cron/brief/publish",
+      "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/api/cron/studio/generate",
+      "schedule": "0 9 * * 3"
+    },
+    {
+      "path": "/api/cron/onboarding/mails",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}

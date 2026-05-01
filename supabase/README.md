@@ -44,6 +44,30 @@ Erwartet: `brand_profile`, `brief_issue`, `customer`, `news_item`, `subscriber`.
 - Anon-Key kann *aktuell nichts* lesen oder schreiben — das ist Absicht. Sobald
   Kunden-Logins existieren, kommen Policies dazu.
 
+## Storage-Bucket (KW 2)
+
+Für Tracer Studio braucht es einen Bucket `studio-assets` (public-read,
+write nur via service-role).
+
+**Anlegen — Variante UI:**
+
+1. Supabase Dashboard → **Storage** → **New bucket**
+2. Name: `studio-assets`
+3. Public bucket: **an** (damit `getPublicUrl()` funktioniert ohne signed-URL)
+4. File-Size-Limit: 10 MB (FLUX-PNGs liegen typisch bei 1–3 MB)
+5. Create
+
+**Anlegen — Variante SQL:**
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('studio-assets', 'studio-assets', true)
+on conflict (id) do update set public = excluded.public;
+
+-- Optional: explizite Policy, dass nur service-role schreibt.
+-- Public-Read ist über bucket.public = true automatisch erlaubt.
+```
+
 ## Backup
 
 Supabase Free-Tier macht tägliche Auto-Backups (7 Tage Retention). Für
