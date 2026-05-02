@@ -15,7 +15,7 @@ import { makeToken } from "@/lib/approve-token";
 import { checkCronAuth } from "@/lib/cron-auth";
 
 export const runtime = "nodejs";
-export const maxDuration = 600; // 10 min — bei vielen customers wichtig
+export const maxDuration = 300; // Hobby-Plan-Limit; ab ~10 aktiven Customers auf Pro-Plan oder Batch-Splitting umstellen
 
 interface ActiveCustomer {
   id: string;
