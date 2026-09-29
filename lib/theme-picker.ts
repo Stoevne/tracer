@@ -8,10 +8,9 @@
  *  3. Claude pickt eines + formuliert ein einzeiliges Theme
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { neuestesModell } from "@/lib/claude-model";
 import { embedTexts } from "@/lib/voyage";
 import { supabaseAdmin } from "@/lib/supabase";
-
-const MODEL = "claude-haiku-4-5-20251001"; // Theme-Pick ist klein → Haiku reicht
 
 export interface ThemePickInput {
   brand: {
@@ -81,8 +80,8 @@ Output: striktes JSON.
 Wähle das Thema, das (a) zu Brand und Tonalität passt, (b) gerade aktuell ist, (c) auf LinkedIn diskussionswürdig ist. Vermeide reine Produkt-PR und Marktforschungs-Banalitäten.`;
 
   const res = await client.messages.create({
-    model: MODEL,
-    max_tokens: 600,
+    model: await neuestesModell(client, "haiku"), // Theme-Pick ist klein → Haiku reicht
+    max_tokens: 2000, // Reserve, falls ein neueres Haiku mitdenkt
     system: [{ type: "text", text: sysPrompt, cache_control: { type: "ephemeral" } }],
     messages: [
       {

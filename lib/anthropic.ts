@@ -1,11 +1,10 @@
 /**
- * Anthropic-Client für den Brief-Curator (Claude Sonnet 4.6).
+ * Anthropic-Client für den Brief-Curator (jeweils neuestes Claude Sonnet, lib/claude-model.ts).
  * Nutzt prompt caching auf den System-Prompt — bei Test-Runs spart das,
  * der wöchentliche Production-Run ist eh nur einmal.
  */
 import Anthropic from "@anthropic-ai/sdk";
-
-const MODEL = "claude-sonnet-4-6";
+import { neuestesModell } from "@/lib/claude-model";
 
 let cached: Anthropic | null = null;
 
@@ -82,8 +81,9 @@ ${itemsList}
 Wähle die 5–7 relevantesten und antworte ausschließlich mit dem JSON-Schema.`;
 
   const res = await c.messages.create({
-    model: MODEL,
-    max_tokens: 4000,
+    model: await neuestesModell(c, "sonnet"),
+    // Neuere Modelle denken mit, und das zählt in max_tokens. Reserve, damit das JSON nicht abreißt.
+    max_tokens: 8000,
     system: [
       {
         type: "text",
