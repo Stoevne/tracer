@@ -146,6 +146,16 @@ async function handle(req: Request) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`brief/draft ${language} failed`, err);
       reports.push({ language, status: "failed", error: msg });
+      // Ohne diese Mail fiele ein Ausfall nur an der fehlenden Freigabemail auf.
+      const ownerEmail = process.env.OWNER_EMAIL;
+      if (ownerEmail) {
+        await sendMail({
+          to: ownerEmail,
+          subject: `Tracer Brief KW ${kw} (${language}) fehlgeschlagen`,
+          html: `<p>Der Curator-Lauf ist fehlgeschlagen, es gibt keinen Draft.</p><pre>${escapeHtml(msg)}</pre>`,
+          text: `Der Curator-Lauf ist fehlgeschlagen, es gibt keinen Draft.\n\n${msg}`,
+        }).catch((mailErr) => console.error("failure mail failed", mailErr));
+      }
     }
   }
 

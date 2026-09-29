@@ -84,6 +84,8 @@ Wähle die 5–7 relevantesten und antworte ausschließlich mit dem JSON-Schema.
     model: await neuestesModell(c, "sonnet"),
     // Neuere Modelle denken mit, und das zählt in max_tokens. Reserve, damit das JSON nicht abreißt.
     max_tokens: 8000,
+    // Denktiefe fest: ohne Vorgabe denkt Sonnet 5.5 auf "high", und DE + EN laufen nacheinander im 300-s-Limit von Vercel.
+    output_config: { effort: "medium" },
     system: [
       {
         type: "text",
@@ -93,6 +95,10 @@ Wähle die 5–7 relevantesten und antworte ausschließlich mit dem JSON-Schema.
     ],
     messages: [{ role: "user", content: userMessage }],
   });
+
+  if (res.stop_reason !== "end_turn") {
+    throw new Error(`Curator stopped: stop_reason=${res.stop_reason} (${res.model})`);
+  }
 
   const block = res.content.find((b) => b.type === "text");
   if (!block || block.type !== "text") {
